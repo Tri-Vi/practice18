@@ -1,0 +1,101 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../bower_components/paper-card/paper-card.html">
+<link rel="import" href="shared-styles.html">
+
+<dom-module id="my-view6">
+  <template>
+    <style include="shared-styles">
+      :host {
+        display: block;
+        padding: 10px;
+      }
+
+    </style>
+    <iron-ajax
+     id="postAjax"
+     url="https://jsonplaceholder.typicode.com/posts"
+     method="POST"
+     body="{{postBody}}"
+     content-type="application/json"
+     handle-as="json",
+     on-response="{{successCallback}}"
+     last-response="{{successObj}}"
+     ></iron-ajax>
+
+     <div class="card">
+       <h1>Post Ajax Request</h1>
+       <div id="inputWrapper">
+         <paper-input id="ip1" label="Input 1" value="{{ip1}}" no-label-float></paper-input>
+         <paper-input id="ip2" label="Input 2" value="{{ip2}}" no-label-float></paper-input>
+         <paper-input id="ip3" label="Input 3" value="{{ip3}}" no-label-float></paper-input>
+       </div>
+       <paper-button raised on-tap="postRequest">Post Request<paper-button>
+     </div>
+     <div class="card">
+       <h1>Post Ajax Response</h1>
+       <span>{{displayResult}}</span>
+     </div>
+  </template>
+
+  <script>
+    class MyView6 extends Polymer.Element {
+      static get is() { return 'my-view6'; }
+      static get properties(){
+        return {
+            ip1: {
+              type: String,
+              notify: true
+            },
+            ip2: {
+              type: String,
+              notify: true
+            },
+            ip3: {
+              type: String,
+              notify: true
+            },
+            successObj: {
+              type: Object
+            },
+            postBody: {
+              type: Object,
+              computed: 'getPostBody(ip1, ip2, ip3)'
+            },
+            displayResult: {
+              computed: 'getResult(successObj)'
+            }
+          }
+        }
+
+        postRequest(){
+          this.$.postAjax.generateRequest();
+        }
+
+        getPostBody(i1, i2, i3){
+          return {
+            i1: i1,
+            i2: i2,
+            i3: i3
+          }
+        }
+        getResult(successObj){
+          return JSON.stringify(successObj);
+        }
+    }
+
+    window.customElements.define(MyView6.is, MyView6);
+  </script>
+</dom-module>
